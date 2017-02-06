@@ -1,0 +1,25 @@
+{
+    "name": "mahlstrom/clitools",
+    "description": "My clitools package",
+    "minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "Magnus Ahlstrom",
+            "email": "magnus@atuin.se"
+        }
+    ],
+    "license": "MIT",
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*"
+    },
+    "require": {
+        "php": ">=5.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "mahlstrom\\": ".",
+            "mahlstrom\\test\\":"src/test"
+
+        }
+    }
+}
