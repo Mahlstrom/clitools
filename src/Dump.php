@@ -36,18 +36,18 @@ class Dump
         $this->indent += $this->tSize;
         switch (gettype($i)) {
             case 'NULL':
-                echo C::_('NULL' . PHP_EOL)->cyan();
+                echo ANSI::_('NULL' . PHP_EOL)->cyan();
                 break;
             case 'boolean':
-                echo C::_(($i) ? "true" : "false")->cyan();
+                echo ANSI::_(($i) ? "true" : "false")->cyan();
                 echo PHP_EOL;
                 break;
             case 'string':
-                echo '"' . C::_($i)->yellow()->dark() . '"' . C::_(' (' . mb_strlen($i) . ')')->dark_gray();
+                echo '"' . ANSI::_($i)->yellow()->dark() . '"' . ANSI::_(' (' . mb_strlen($i) . ')')->dark_gray();
                 echo PHP_EOL;
                 break;
             case 'integer':
-                echo C::_($i)->light_blue();
+                echo ANSI::_($i)->light_blue();
                 echo PHP_EOL;
                 break;
             case 'array':
@@ -62,16 +62,16 @@ class Dump
                 $vw = $this->checkVarWidth($vars);
                 foreach ($vars as $varKey => $var) {
                     if (preg_match('/^\x00' . str_replace('\\', '\\\\', $className) . '\x00(.*)$/', $varKey, $res)) {
-                        $keyOut = C::_($res[1]);
-                        $dd = C::_('=>')->red()->dark();
+                        $keyOut = ANSI::_($res[1]);
+                        $dd = ANSI::_('=>')->red()->dark();
                     } elseif (preg_match('/^\x00\*\x00(.*)$/', $varKey, $res)) {
-                        $keyOut = C::_($res[1]);
-                        $dd = C::_('=>')->cyan();
+                        $keyOut = ANSI::_($res[1]);
+                        $dd = ANSI::_('=>')->cyan();
                     } else {
-                        $keyOut = C::_($varKey);
-                        $dd = C::_('=>')->light_green();
+                        $keyOut = ANSI::_($varKey);
+                        $dd = ANSI::_('=>')->light_green();
                     }
-                    $kSize = mb_strlen(C::stripColors($keyOut));
+                    $kSize = mb_strlen(ANSI::stripColors($keyOut));
                     $kSpace = $vw - $kSize + 2;
                     if (($vw - $kSize) < 0) {
                         echo PHP_EOL;
@@ -93,7 +93,7 @@ class Dump
             default:
                 $this->put(gettype($i) . PHP_EOL, -$this->indent);
                 echo PHP_EOL;
-                echo C::_('FIX THIS')->red()->underline();
+                echo ANSI::_('FIX THIS')->red()->underline();
                 exit();
         }
         $this->indent -= $this->tSize;

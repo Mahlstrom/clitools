@@ -8,7 +8,7 @@
 namespace mahlstrom\cli;
 
 use DateTime;
-use mahlstrom\C;
+use mahlstrom\ANSI;
 
 /**
  * Class CLIHelper
@@ -21,6 +21,7 @@ class Factory
     private static $h;
 
     /**
+     * Stores and returns the width and height of the terminal
      * @return array
      */
     public static function getHeightWidth()
@@ -39,15 +40,15 @@ class Factory
             $roc = self::$lines;
         }
         for ($i = 0; $i < (self::$h - $roc - 1); $i++) {
-            self::$buff .= C::_(str_repeat(' ', self::$w)) . PHP_EOL;
+            self::$buff .= ANSI::_(str_repeat(' ', self::$w)) . PHP_EOL;
         }
         $D = (new DateTime())->format('Y-m-d H:i:s');
-        self::$buff .= C::_(sprintf('%-' . (self::$w - strlen($D)) . 's%s', getmypid(), $D));
+        self::$buff .= ANSI::_(sprintf('%-' . (self::$w - strlen($D)) . 's%s', getmypid(), $D));
         echo self::$buff;
     }
 
     /**
-     * @param string|array|\mahlstrom\C $input
+     * @param string|array|\mahlstrom\ANSI $input
      * @param boolean                   $center
      * @param boolean                   $return
      * @return string
@@ -76,11 +77,11 @@ class Factory
         if ($clear) {
             self::$buff = "\033[H";
         }
-        self::$buff .= C::_(self::fLine(" $string ", true, true))->white()->underline()->bold();
+        self::$buff .= ANSI::_(self::fLine(" $string ", true, true))->white()->underline()->bold();
     }
 
     /**
-     * @param string|\mahlstrom\C $string
+     * @param string|\mahlstrom\ANSI $string
      * @param boolean             $center
      * @param boolean             $return
      * @return string
@@ -88,7 +89,7 @@ class Factory
     public static function storeOrReturn($string, bool $center, bool $return)
     {
         self::$lines++;
-        $len = strlen(C::stripColors($string));
+        $len = strlen(ANSI::stripColors($string));
         $dif = (strlen($string) - $len);
         if ($center) {
             $sides = (self::$w / 2) - $len / 2;

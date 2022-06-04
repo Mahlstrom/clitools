@@ -59,7 +59,7 @@ namespace mahlstrom;
  * @method $this bg_white()
  *
  */
-class C
+class ANSI
 {
     private $string = '';
     private $composed;
@@ -117,7 +117,7 @@ class C
     );
     static public function _($string)
     {
-        return new C($string);
+        return new ANSI($string);
     }
 
     public function __construct($string=false)
@@ -145,15 +145,13 @@ class C
     public static function getSprintf($string, $size)
     {
         $added = 0;
-        if (preg_match_all("/\\033\[[^\m]*m/", $string, $ar)) {
-            $added = strlen($string) - strlen(preg_replace('/\\033\[[^\m]*m/', '', $string));
+        if (preg_match_all("/\\033\[[^m]*m/", $string, $ar)) {
+            $added = strlen($string) - strlen(preg_replace('/\\033\[[^m]*m/', '', $string));
         }
         $string=sprintf('%-' . ($added + $size) . 's', $string);
         return $string;
     }
     public static function stripColors($string){
-        return preg_replace('/\\033\[[^\m]*m/', '', $string);
+        return preg_replace('/\\033\[[^m]*m/', '', $string);
     }
-
-
 }

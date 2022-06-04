@@ -3,35 +3,20 @@
  * @author Magnus Ahlstrom <magnus@atuin.se>
  * @time 2015-01-19 22:49
  */
+
 namespace mahlstrom\test;
 
+use InvalidArgumentException;
 use mahlstrom\CommandLineArg;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class CommandLineArgTest
  */
-class CommandLineArgTest extends \PHPUnit_Framework_TestCase
+class CommandLineArgTest extends TestCase
 {
 
-    protected $expStr;
-
-    public function setUp()
-    {
-        $this->expStr = 'Usage: ide-phpunit.php [OPTIONS]... ' . PHP_EOL;
-        $this->expStr .= '  -a          --ano                       Description' . PHP_EOL;
-        $this->expStr .= '  -b [<arg>]  --bnn[=<arg>]               Description' . PHP_EOL;
-        $this->expStr .= '  -c <arg>    --cny=<arg>                 Description' . PHP_EOL;
-        $this->expStr .= '  -d          --dyo                       Description (required)' . PHP_EOL;
-        $this->expStr .= '  -e [<arg>]  --eyn[=<arg>]               Description (required)' . PHP_EOL;
-        $this->expStr .= '  -f <arg>    --fyy=<arg>                 Description (required)' . PHP_EOL;
-        CommandLineArg::reset();
-        CommandLineArg::addArgument('ano', 'a', 'Description');
-        CommandLineArg::addArgument('bnn', 'b', 'Description', false, false);
-        CommandLineArg::addArgument('cny', 'c', 'Description', false, true);
-        CommandLineArg::addArgument('dyo', 'd', 'Description', true);
-        CommandLineArg::addArgument('eyn', 'e', 'Description', true, false);
-        CommandLineArg::addArgument('fyy', 'f', 'Description', true, true);
-    }
+    protected string $expStr;
 
     /**
      * @test
@@ -69,6 +54,9 @@ class CommandLineArgTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('ff', CommandLineArg::get('fyy'));
     }
 
+    /**
+     * @test
+     */
     public function testAllDoubleDashes()
     {
         $arguments = [
@@ -91,10 +79,11 @@ class CommandLineArgTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException \InvalidArgumentException
      */
     public function globalArgs()
     {
+        $this->expectException(InvalidArgumentException::class);
+       // $this->expectExceptionMessageMatches('configuration is not a valid argument');
         CommandLineArg::parse();
     }
 
@@ -110,10 +99,10 @@ class CommandLineArgTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException \InvalidArgumentException
      */
     public function checkInvalidArgument()
     {
+        $this->expectException(InvalidArgumentException::class);
         CommandLineArg::reset();
         CommandLineArg::parse(['', '-wrong']);
     }
@@ -133,11 +122,11 @@ class CommandLineArgTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage cny must have value.
      */
     public function doRequiredValueFail()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('cny must have value.');
         $arguments = [
             '',
             '-a',
@@ -185,6 +174,9 @@ class CommandLineArgTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse(CommandLineArg::get('fea'));
     }
 
+    /**
+     * @test
+     */
     public function testMultipleChars()
     {
         $this->expectOutputString('');
@@ -197,6 +189,9 @@ class CommandLineArgTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('magnus', CommandLineArg::get('cny'));
     }
 
+    /**
+     * @test
+     */
     public function testMultipleCharsWithOneForcedValue()
     {
         $this->expectOutputString('');
@@ -213,11 +208,12 @@ class CommandLineArgTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage cny must have value.
+     * @test
      */
     public function testMultipleCharsWithOneForcedValueWrongOrder()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('cny must have value.');
         $this->expectOutputString('');
         CommandLineArg::reset();
         CommandLineArg::addArgument('ano', 'a', 'Description');
@@ -246,5 +242,23 @@ class CommandLineArgTest extends \PHPUnit_Framework_TestCase
         CommandLineArg::parse(['', '-a', 'FlagArg', 'Arg1']);
         $this->assertEquals('FlagArg', CommandLineArg::get('ano'));
         $this->assertEquals('Arg1', CommandLineArg::getArgs()[0]);
+    }
+
+    protected function setUp(): void
+    {
+        $this->expStr = 'Usage: phpunit [OPTIONS]... ' . PHP_EOL;
+        $this->expStr .= '  -a          --ano                       Description' . PHP_EOL;
+        $this->expStr .= '  -b [<arg>]  --bnn[=<arg>]               Description' . PHP_EOL;
+        $this->expStr .= '  -c <arg>    --cny=<arg>                 Description' . PHP_EOL;
+        $this->expStr .= '  -d          --dyo                       Description (required)' . PHP_EOL;
+        $this->expStr .= '  -e [<arg>]  --eyn[=<arg>]               Description (required)' . PHP_EOL;
+        $this->expStr .= '  -f <arg>    --fyy=<arg>                 Description (required)' . PHP_EOL;
+        CommandLineArg::reset();
+        CommandLineArg::addArgument('ano', 'a', 'Description');
+        CommandLineArg::addArgument('bnn', 'b', 'Description', false, false);
+        CommandLineArg::addArgument('cny', 'c', 'Description', false, true);
+        CommandLineArg::addArgument('dyo', 'd', 'Description', true);
+        CommandLineArg::addArgument('eyn', 'e', 'Description', true, false);
+        CommandLineArg::addArgument('fyy', 'f', 'Description', true, true);
     }
 }
