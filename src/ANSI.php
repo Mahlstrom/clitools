@@ -476,7 +476,7 @@ class ANSI
             }
             return $rets . "\e[" . join(';', $eParts) . 'm' . $str . "\e[" . $reset . "m";
         }
-        return $this->string;
+        return $str;
     }
 
     public function __call(string $name, array $arguments)
