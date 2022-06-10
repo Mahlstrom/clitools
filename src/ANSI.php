@@ -1,5 +1,7 @@
 <?php
+
 namespace mahlstrom;
+
 /**
  * Class ANSI.
  *
@@ -20,7 +22,6 @@ namespace mahlstrom;
  * @method $this align_center()
  * @method $this align_left()
  * @method $this align_right()
-
  * @method $this default()
  * @method $this black()
  * @method $this red()
@@ -30,10 +31,8 @@ namespace mahlstrom;
  * @method $this magenta()
  * @method $this cyan()
  * @method $this light_gray()
-
  * @method $this purple()
  * @method $this light_purple()
-
  * @method $this dark_gray()
  * @method $this light_red()
  * @method $this light_green()
@@ -42,7 +41,6 @@ namespace mahlstrom;
  * @method $this light_magenta()
  * @method $this light_cyan()
  * @method $this white()
-
  * @method $this bg_default()
  * @method $this bg_black()
  * @method $this bg_red()
@@ -52,7 +50,6 @@ namespace mahlstrom;
  * @method $this bg_magenta()
  * @method $this bg_cyan()
  * @method $this bg_light_gray()
-
  * @method $this bg_dark_gray()
  * @method $this bg_light_red()
  * @method $this bg_light_green()
@@ -463,13 +460,14 @@ class ANSI
             $str = str_pad($str, $this->width, " ", $this->align);
         }
         if (count($eParts)) {
-            if (isset($this->fg) && !isset($this->bg)) {
-                $reset = 39;
-            } elseif (!isset($this->fg) && isset($this->bg)) {
-                $reset = 49;
-            } else {
-                $reset = 0;
-            }
+//            if (isset($this->fg) && !isset($this->bg)) {
+//                $reset = 39;
+//            } elseif (!isset($this->fg) && isset($this->bg)) {
+//                $reset = 49;
+//            } else {
+//                $reset = 0;
+//            }
+            $reset = 0;
             $rets = "";
             if (isset($this->pos)) {
                 $rets = "\e[" . $this->pos . 'H';
@@ -579,5 +577,12 @@ class ANSI
     {
         $this->string = $string;
         return $this;
+    }
+
+    public static function resetScreen(): void
+    {
+        echo "\e[H";
+        echo "\e[J";
+        echo "\e[0m";
     }
 }

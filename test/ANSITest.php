@@ -35,6 +35,10 @@ class ANSITest extends TestCase
 //        $this->assertEquals("\e[9mtest\e[0m", ANSI::_("test")->default());
     }
 
+    public function testDefaultColor(){
+        $this->assertEquals("\e[31mtest\e[0m",ANSI::_('test')->red()->__toString());
+    }
+
     /**
      * @test
      */
@@ -124,11 +128,11 @@ class ANSITest extends TestCase
     }
 
     public function testFg(){
-        $this->expectOutputString("\e[38;5;231mMagnus\e[39m");
+        $this->expectOutputString("\e[38;5;231mMagnus\e[0m");
         echo ANSI::_('Magnus')->fg("#FFFFFF");
     }
     public function testBg(){
-        $this->expectOutputString("\e[48;5;231mMagnus\e[49m");
+        $this->expectOutputString("\e[48;5;231mMagnus\e[0m");
         echo ANSI::_('Magnus')->bg("#FFFFFF");
     }
     public function testFgBg(){
